@@ -226,8 +226,15 @@ function restartGame() {
 /* Bootstrap                                                            */
 /* ------------------------------------------------------------------ */
 
-injectCompanionPanel();
-captureGameEvents();
+// If we somehow reached here under file://, js/file-protocol-guard.js
+// should have already shown an error overlay and the ES modules would
+// not have loaded anyway.  Defensive double-check just in case.
+if (location.protocol === 'file:') {
+  console.error('[ghost-companion] file:// is not supported. Run ./start.sh and open the printed URL.');
+} else {
+  injectCompanionPanel();
+  captureGameEvents();
+}
 
 // Helpful console breadcrumb so users can debug.
 console.log('[ghost-companion] loaded. Config:', { ...loadConfig(), apiKey: '***' });

@@ -18,6 +18,12 @@
 
 set -euo pipefail
 
+# Allow --help / -h even when no port given.
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  sed -n '2,12p' "$0"
+  exit 0
+fi
+
 PORT="${1:-8000}"
 URL="http://localhost:${PORT}/vendor/advent/advent.html"
 
