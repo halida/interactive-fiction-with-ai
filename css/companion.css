@@ -54,8 +54,6 @@
   color: var(--bgcolor, #000);
 }
 
-#ghostGearIcon { display: none; } /* we use the unicode ⚙ instead */
-
 /* --- Companion panel --- */
 #ghost-companion {
   position: fixed;
