@@ -4,25 +4,31 @@
 
 **项目目标**：验证"有 AI 陪伴是否让游戏更有趣、更不容易卡关"。
 
-> ⚠️ 这是**纯前端原型**，零后端、零构建步骤。打开 HTML 就能玩。
+> ⚠️ 这是**纯前端原型**，零后端、零构建步骤。**但必须通过 HTTP server 打开** —— 双击 `file://` 模式下游戏会卡在 "Initializing... please wait"（见下方说明）。
 
 ---
 
 ## 1. 怎么跑
 
-### 方法 1 — 双击 HTML（最简单）
-直接双击 `vendor/advent/advent.html`，浏览器打开即可。
+### ⚠️ 必须用 HTTP server
 
-> ⚠️ 注意：如果你配的 LLM 端点对 `file://` 协议有限制，方法 2 更稳。
+**直接双击 `vendor/advent/advent.html` 打不开游戏。** 上游 CCA 引擎在 `file://` 协议下会抛 `cssRules` SecurityError（不同目录的 CSS 被浏览器视为不同 origin），导致 `sizeCalc()` 中断、整个 init 流程中止、屏幕永远停在 "Initializing... please wait"。
 
-### 方法 2 — 启动一个静态服务器
+### 启动方式
+
+#### A. 一键脚本（推荐）
 ```bash
-# 任选一种
-python -m http.server 8000        # 然后访问 http://localhost:8000/vendor/advent/advent.html
-# 或
-npx serve .
+./start.sh                     # 默认 8000 端口
+./start.sh 8080                # 自定义端口
 ```
-原因：`openai` JS SDK 通过 ESM CDN（`esm.sh`）加载，部分浏览器对 `file://` 协议的 ESM 有限制；本地 HTTP 没有这问题。
+然后浏览器访问脚本打印的 URL。
+
+#### B. 手动启动
+```bash
+python3 -m http.server 8000
+# 然后访问 http://localhost:8000/vendor/advent/advent.html
+```
+或：`npx serve .`
 
 ---
 

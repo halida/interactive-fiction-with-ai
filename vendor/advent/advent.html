@@ -6,8 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <link rel="stylesheet" href="css/advent.css">
-  <link rel="stylesheet" href="../css/companion.css">
+  <link rel="stylesheet" href="../../css/companion.css">
   <title>Colossal Cave Adventure &ndash; 350 Points + 👻 Ghost Companion</title>
+  <!--
+    File-protocol guard: a plain (non-module) script that detects
+    file:// early and shows a friendly error.  Must come BEFORE the
+    ES modules below, because file:// blocks ES module imports via
+    CORS, so companion.js / settings.js / prompt.js never even get
+    a chance to run.
+  -->
+  <script src="../../js/file-protocol-guard.js"></script>
 </head>
 <body>
   <div id="ccinvisible" class="hidden"></div>
@@ -47,8 +55,8 @@
     <button type="button" id="ghostRestartBtn" title="Restart Game" aria-label="Restart Game">⟳</button>
   </div>
 
-  <script type="module" src="../js/settings.js"></script>
-  <script type="module" src="../js/prompt.js"></script>
-  <script type="module" src="../js/companion.js"></script>
+  <script type="module" src="../../js/settings.js"></script>
+  <script type="module" src="../../js/prompt.js"></script>
+  <script type="module" src="../../js/companion.js"></script>
 </body>
 </html>
