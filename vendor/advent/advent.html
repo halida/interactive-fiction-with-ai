@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="Author" content="sulkasormi">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="css/advent.css">
+  <link rel="stylesheet" href="../css/companion.css">
+  <title>Colossal Cave Adventure &ndash; 350 Points + 👻 Ghost Companion</title>
+</head>
+<body>
+  <div id="ccinvisible" class="hidden"></div>
+  <div id="playarea">
+    <div id="cctext"></div>
+    <div id="ccanykey" class="invisible"></div>
+    <input type="text" id="ccinput" maxlength="30" autocapitalize="none">
+    <div class="ccParserContainer"></div>
+      <span id="ccparser"></span>
+      <div id="ccCursor"></div>
+      <div class="mobileAdjuster onlymobile nomargin"></div>
+    </div>
+    <div class="sidebar">
+      <svg id="gearIcon" xmlns="https://www.w3.org/2000/svg"><script href="js/gear-icon.js"></script></svg>
+      <div id="about" class="center">?</div>
+      <div id="cctimer" class="align-right invisible"></div>
+      <svg id="mobIcon" xmlns="https://www.w3.org/2000/svg"><script href="js/mobile-icon.js"></script></svg>
+    </div>
+    <div class="settings noscrollbar">
+      <form id="ccinputform">
+      </form>
+    </div>
+  </div>
+  <script src="js/advent.js"></script>
+
+  <!-- ==================== Ghost Companion ==================== -->
+  <!-- Companion UI is injected dynamically by js/companion.js.        -->
+  <!-- Settings button is placed inside the existing .sidebar.         -->
+  <!-- Game engine by sulkasormi (https://github.com/sulkasormi/advent) -->
+  <div class="sidebar" id="ghost-sidebar" hidden>
+    <span id="ghost-credit" title="CCA engine by sulkasormi">CCA &middot; sulkasormi</span>
+    <svg id="ghostGearIcon" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <button type="button" id="ghostSettingsBtn" title="AI Companion Settings" aria-label="AI Companion Settings">⚙</button>
+    <button type="button" id="ghostRestartBtn" title="Restart Game" aria-label="Restart Game">⟳</button>
+  </div>
+
+  <script type="module" src="../js/settings.js"></script>
+  <script type="module" src="../js/prompt.js"></script>
+  <script type="module" src="../js/companion.js"></script>
+</body>
+</html>
