@@ -128,6 +128,61 @@
   animation: ghost-blink 1s steps(2, start) infinite;
 }
 
+/* Clickable command suggestion inside an AI bubble.
+   Used for the `>> command <<` markers in the AI's reply. */
+.ghost-suggestion {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: var(--ghost-accent);
+  color: #0e0e14;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-size: 0.95em;
+  vertical-align: baseline;
+  transition: filter 0.15s ease;
+}
+.ghost-suggestion:hover {
+  filter: brightness(1.2);
+}
+.ghost-suggestion:active {
+  filter: brightness(0.9);
+}
+
+/* Quick-action bar pinned to the bottom of the companion panel. */
+#ghost-quickbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--ghost-bubble-border);
+  background: var(--ghost-bg);
+  flex-shrink: 0;
+}
+.ghost-quickbtn {
+  flex: 1 1 auto;
+  min-width: 36px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--ghost-accent-dim);
+  color: var(--ghost-accent);
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85em;
+  text-align: center;
+}
+.ghost-quickbtn:hover {
+  background: var(--ghost-accent);
+  color: var(--ghost-bg);
+}
+.ghost-quickbtn:active {
+  filter: brightness(0.9);
+}
+
 @keyframes ghost-blink {
   to { visibility: hidden; }
 }

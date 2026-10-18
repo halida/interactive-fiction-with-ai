@@ -68,6 +68,78 @@ function injectCompanionPanel() {
   document.getElementById(RESTART_BTN_ID)?.addEventListener('click', () => {
     restartGame();
   });
+
+  // Quick-action bar pinned to the bottom of the panel.
+  injectQuickbar(panel);
+}
+
+const QUICK_ACTIONS = [
+  { label: 'look',       cmd: 'look' },
+  { label: 'inv',        cmd: 'inventory' },
+  { label: 'help',       cmd: 'help' },
+  { label: 'N',          cmd: 'north' },
+  { label: 'S',          cmd: 'south' },
+  { label: 'E',          cmd: 'east' },
+  { label: 'W',          cmd: 'west' },
+  { label: '↑',          cmd: 'up' },
+  { label: '↓',          cmd: 'down' },
+];
+
+function injectQuickbar(panel) {
+  if (panel.querySelector('#ghost-quickbar')) return;
+  const bar = document.createElement('div');
+  bar.id = 'ghost-quickbar';
+  for (const { label, cmd } of QUICK_ACTIONS) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ghost-quickbtn';
+    btn.textContent = label;
+    btn.title = `Send: ${cmd}`;
+    btn.addEventListener('click', () => sendCommand(cmd));
+    bar.appendChild(btn);
+  }
+  panel.appendChild(bar);
+}
+
+function sendCommand(cmd) {
+  const ccinput = document.getElementById('ccinput');
+  if (!ccinput) return;
+  ccinput.value = cmd;
+  // Synthesize an Enter keydown so the upstream engine picks it up
+  // exactly the same way as if the user had typed it.
+  const ev = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+  ccinput.dispatchEvent(ev);
+  // Clear after dispatch — engine reads the value synchronously above.
+  ccinput.value = '';
+}
+
+/* Render an AI bubble's text.  Any `>> cmd <<` substring becomes a
+ * clickable button that fires sendCommand(cmd) when clicked. */
+function renderBubbleContent(bubble, rawText) {
+  // Build a DocumentFragment by walking the text and substituting
+  // `>> ... <<` chunks with buttons.
+  const frag = document.createDocumentFragment();
+  const re = />>\s*([^><]+?)\s*<</g;
+  let lastIdx = 0;
+  let m;
+  while ((m = re.exec(rawText)) !== null) {
+    if (m.index > lastIdx) {
+      frag.appendChild(document.createTextNode(rawText.slice(lastIdx, m.index)));
+    }
+    const cmd = m[1].trim();
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ghost-suggestion';
+    btn.textContent = cmd;
+    btn.title = `Send: ${cmd}`;
+    btn.addEventListener('click', () => sendCommand(cmd));
+    frag.appendChild(btn);
+    lastIdx = re.lastIndex;
+  }
+  if (lastIdx < rawText.length) {
+    frag.appendChild(document.createTextNode(rawText.slice(lastIdx)));
+  }
+  bubble.appendChild(frag);
 }
 
 function appendBubble(kind, text, { stream = false } = {}) {
@@ -80,7 +152,21 @@ function appendBubble(kind, text, { stream = false } = {}) {
 
   const bubble = document.createElement('div');
   bubble.className = `ghost-bubble ${kind}`;
-  bubble.textContent = text;
+  if (stream) {
+    // For streaming AI replies we accumulate outside, then
+    // re-render via renderBubbleContent() each chunk.
+    bubble._streamText = '';
+    bubble._renderStream = (chunk) => {
+      bubble._streamText += chunk;
+      // Preserve a trailing cursor element.
+      const cursor = bubble.querySelector('.ghost-stream-cursor');
+      bubble.textContent = '';
+      renderBubbleContent(bubble, bubble._streamText);
+      if (cursor) bubble.appendChild(cursor);
+    };
+  } else {
+    renderBubbleContent(bubble, text);
+  }
   if (stream) {
     const cursor = document.createElement('span');
     cursor.className = 'ghost-stream-cursor';
@@ -181,10 +267,8 @@ async function streamAssistantReply() {
       if (!delta) continue;
       accumulated += delta;
 
-      // Re-render bubble content but keep streaming cursor at the end.
-      const cursor = bubble.querySelector('.ghost-stream-cursor');
-      bubble.textContent = accumulated;
-      if (cursor) bubble.appendChild(cursor);
+      // Re-render with parser so any complete `>> cmd <<` becomes a button.
+      bubble._renderStream(delta);
 
       const log = document.getElementById('ghost-companion-log');
       if (log) log.scrollTop = log.scrollHeight;
