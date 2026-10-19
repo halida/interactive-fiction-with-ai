@@ -31,6 +31,20 @@
   border-radius: 6px;
 }
 
+/*
+ * Defensive override: the upstream advent.css rule `.sidebar > *`
+ * forces every direct child to the full sidebar width/height
+ * (because the original sidebar holds three giant svg icons stacked
+ * vertically).  Inherit that class and the credit text balloons to
+ * the full sidebar width.  Reset to auto so children size to their
+ * content even if a future change accidentally re-adds class="sidebar".
+ */
+#ghost-sidebar > * {
+  width: auto !important;
+  height: auto !important;
+  padding-bottom: 0 !important;
+}
+
 #ghost-sidebar #ghost-credit {
   color: var(--ghost-accent-dim);
   margin-right: 6px;

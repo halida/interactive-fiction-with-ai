@@ -45,7 +45,13 @@
   <!-- Companion UI is injected dynamically by js/companion.js.        -->
   <!-- Settings button is placed inside the existing .sidebar.         -->
   <!-- Game engine by sulkasormi (https://github.com/sulkasormi/advent) -->
-  <div class="sidebar" id="ghost-sidebar" hidden>
+  <!-- We deliberately do NOT use class="sidebar" here: the upstream
+       .sidebar > * rule would force every direct child to the full
+       sidebar width/height (because the original sidebar holds three
+       giant svg icons stacked vertically).  Our sidebar wants
+       auto-sized children in a horizontal flex row, so we omit the
+       shared class. -->
+  <div id="ghost-sidebar" hidden>
     <span id="ghost-credit" title="CCA engine by sulkasormi">CCA &middot; sulkasormi</span>
     <button type="button" id="ghostSettingsBtn" title="AI Companion Settings" aria-label="AI Companion Settings">⚙</button>
     <button type="button" id="ghostRestartBtn" title="Restart Game" aria-label="Restart Game">⟳</button>
