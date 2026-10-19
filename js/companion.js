@@ -13,7 +13,7 @@
  * ========================================================= */
 
 import { loadConfig, openSettingsDialog } from './settings.js';
-import { formatRound, buildMessages } from './prompt.js';
+import { formatRound, buildMessages, estimateTokens } from './prompt.js';
 
 const COMPANION_ID = 'ghost-companion';
 const SETTINGS_BTN_ID = 'ghostSettingsBtn';
@@ -252,7 +252,14 @@ async function streamAssistantReply() {
       dangerouslyAllowBrowser: true,
     });
 
-    const messages = buildMessages(state.history);
+    const { messages, droppedRounds, totalEntries } = buildMessages(state.history);
+    const est = estimateTokens(messages);
+    console.log(
+      `[ghost-companion] sending ${totalEntries} messages ` +
+      `(~${est.approxTokens} tokens, ${est.cjk} CJK / ${est.ascii} ASCII ` +
+      `chars, dropped ${droppedRounds} oldest rounds)`
+    );
+
     const stream = await client.chat.completions.create({
       model: cfg.model,
       messages,
